@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>    
+    <link href="./css/main.css" rel="stylesheet" />
+    <title>Document</title>
+    <!-- <script type="text/javascript" src="./js/index.js"></script> -->
+  </head>
+
+  <body>
+    <div class="v1_2">
+      <div class="v4_73">
+        <div class="v4_52">
+          <div class="v4_59"><span class="v4_53">ABSTRACT</span></div>
+          <div class="v4_58">
+            <span class="v4_55"
+              >Autism spectrum disorders (ASD) refer to a group of complex
+              neurodevelopmental disorders of the brain such as autism,
+              childhood disintegrative disorders, and Asperger's syndrome,
+              which, as the term “spectrum” implies, have a wide range of
+              symptoms and levels of severity
+            </span>
+          </div>
+        </div>
+        <div class="v4_75">
+          <div class="v4_61">
+            <!-- <button class="v4_68"><span class="v4_69">CHOOSE IMAGE</span></button> -->
+            <input type="file" class="v4_69" id="input_img" accept="image/png, image/jpg">
+            <div class="v4_76"><img id="display_img" class="v4_82"></img></div>
+            <button id="predict-button" class="v4_71"><span class="v4_72">PREDICT</span></button>
+            <p class="predictiona">Autistic : <span id="autistic-preduction"></span></p>
+            <p class="predictionb">Non Autistic : <span id="non-autistic-preduction"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src = "https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+  let base64Image;
+  $("#input_img").change(function(){
+    let reader = new FileReader();
+    reader.onload = function(e){
+      let dataURL = reader.result;
+      $("#display_img").attr("src",dataURL);
+      base64Image=dataURL.replace("data:image/png;base64,","");
+      console.log(base64Image);
+    }
+    reader.readAsDataURL($("#input_img")[0].files[0]);
+    $("#autistic-preduction").text("");
+    $("#non-autistic-preduction").text("");
+  });
+
+  $("#predict-button").click(function(event){
+    let message = {
+      image : base64Image
+    }
+    console.log(message);
+    $.post(
+          "http://127.0.0.1:5000/predict",
+          JSON.stringify(message),
+          function (response) {
+            $("#autistic-preduction").text(response.prediction.autistic.toFixed(6));
+            $("#non-autistic-preduction").text(response.prediction.nonAutistic.toFixed(6));
+            console.log(response);
+          }
+        );
+  });
+
+</script>
+</html>
