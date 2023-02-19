@@ -55,15 +55,19 @@
       image : base64Image
     }
     console.log(message);
-    $.post(
-          "/predict",
-          JSON.stringify(message),
-          function (response) {
+    $.ajax({type:'POST',
+    url:'/predict',
+          data :JSON.stringify(message),
+          contentType:false,
+          cache:false,
+          processData:false,
+          async:true,
+          success: function (response) {
             $("#autistic-preduction").text(response.prediction.autistic.toFixed(6));
             $("#non-autistic-preduction").text(response.prediction.nonAutistic.toFixed(6));
             console.log(response);
-          }
-        );
+          },
+  });
   });
 
 </script>
