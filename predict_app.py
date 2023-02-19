@@ -35,20 +35,22 @@ def preprocess_image(image,target_size):
 print("Loading model")
 get_madel()
 
-@app.route("/predict",methods=["POST"])
+@app.route("/predict",methods=["POST","GET"])
 def predict():
-    message = request.get_json(force=True)
-    encoded = message['image']
-    decoded = base64.b64decode(encoded)
-    image = Image.open(io.BytesIO(decoded))
-    processed_image = preprocess_image(image,target_size=(224,224))
+    if request.method == "POST":
+        message = request.get_json(force=True)
+        encoded = message['image']
+        decoded = base64.b64decode(encoded)
+        image = Image.open(io.BytesIO(decoded))
+        processed_image = preprocess_image(image,target_size=(224,224))
 
-    predction = loaded_model.predict(processed_image).tolist()
+        predction = loaded_model.predict(processed_image).tolist()
 
-    response = {
-        'prediction':{
-            'autistic':predction[0][0],
-            'nonAutistic':predction[0][1]
+        response = {
+            'prediction':{
+                'autistic':predction[0][0],
+                'nonAutistic':predction[0][1]
+            }
         }
-    }
-    return jsonify(response)
+        return jsonify(response)
+    return None
