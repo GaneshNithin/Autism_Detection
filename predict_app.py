@@ -41,7 +41,7 @@ def predict():
     encoded = message['image']
     decoded = base64.b64decode(encoded)
     image = Image.open(io.BytesIO(decoded))
-    processed_image = preprocess_image(image,target_size=(227,227))
+    processed_image = preprocess_image(image,target_size=(224,224))
 
     predction = loaded_model.predict(processed_image).tolist()
 
